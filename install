@@ -1,0 +1,6 @@
+#!/bin/bash
+
+file=`pwd`/src/envinit.py
+echo $file
+chmod +x $file
+ln -s $file /usr/local/bin/envinit

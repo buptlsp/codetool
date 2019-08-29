@@ -1,5 +1,7 @@
-# Example Package
+# CodeTool
 
-This is a simple example package. You can use
-[Github-flavored Markdown](https://guides.github.com/features/mastering-markdown/)
-to write your content.
+```bash 
+git clone git@github.com:buptlsp/codetool.git
+cd codetool
+./install
+```

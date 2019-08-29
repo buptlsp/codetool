@@ -5,7 +5,6 @@ import copy
 import os
 import fire
 import sys
-sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from helpers import *
 
 message = {
@@ -88,7 +87,10 @@ class CodeInit(object):
     def init(self):
         '''initial the config of environments'''
         obj = copy.copy(self)
-        curDir = os.path.dirname(__file__)
+        filePath = __file__
+        if os.path.islink(filePath):
+            filePath = os.readlink(filePath)
+        curDir = os.path.dirname(filePath)
         obj.envPath = os.path.join(curDir, "environments")
         obj.projectRoot = os.path.join(".", "environments")
         if not os.path.isdir(obj.projectRoot):

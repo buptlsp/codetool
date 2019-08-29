@@ -3,4 +3,5 @@
 file=`pwd`/src/envinit.py
 echo $file
 chmod +x $file
+python3 -m pip install -r requirements.txt
 ln -s $file /usr/local/bin/envinit

@@ -36,7 +36,7 @@ envinit run
 envinit
 envinit --help
 ```
-the script will copy `./environment/prod/a/b/config.xx` to `./a/b/config.txt`，thus, we can save our environments in `./environments`.
+the script will copy `./environments/{envName}/a/b/config.xx` to `./a/b/config.txt`，thus, we can save our environments in `./environments`.
 
 **Tips:** the `./environments` should add to git, and the destfile should add to gitignore.
 

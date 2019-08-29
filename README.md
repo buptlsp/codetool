@@ -12,7 +12,7 @@ git glone and install the tool
 ```bash 
 git clone git@github.com:buptlsp/codetool.git
 cd codetool
-./install
+sudo ./install
 ```
 
 **step2:**

@@ -7,20 +7,25 @@ import fire
 import sys
 from helpers import *
 
+version = "0.0.1"
 message = {
     "en" : {
-        "configFileNotExist" : "配置文件%s不存在，请查证后输入",
+        "startText" : "CodeTool v%s:begin to start",
+        "configFileNotExist" : "configuration %s not exist，please check",
         "envNameQuestion": "please input the environment you want to init:",
+        "envNameNotExist" : "%s not exist, please input the correct environment name",
         "fileNotChange": "[ ]%s notchanged",
         "fileGenerate": "[+]%s generated",
         "fileSkiped": "[ ]%s ...skiped",
         "fileOverwrite": "[!]%s overwrite",
         "fileOverwriteQuestion": "the file %s is already exist, do you want to overwrite？（Yes|No|Quit|All）",
-        "fileERR" : "文件%s打不开或没有读权限",
+        "fileERR" : "can't open the file %s",
     },
     "zh-cn" : {
+        "startText" : "CodeTool v%s:开始执行...",
         "configFileNotExist" : "配置文件%s不存在，请查证后输入",
         "envNameQuestion": "请选择你想要选择的环境名:",
+        "envNameNotExist" : "%s不存在，请选择正确的环境名",
         "fileNotChange": "[ ]%s 未改变",
         "fileGenerate": "[+]%s 已新建",
         "fileSkiped": "[ ]%s ...已忽略",
@@ -31,7 +36,7 @@ message = {
 }
 
 class CodeInit(object):
-    def __init__(self, envName="dev", envPath="environments", language="zh-cn", projectRoot=".", overwrite=False):
+    def __init__(self, envName="", envPath="environments", language="zh-cn", projectRoot=".", overwrite=False):
         '''
         :param envName:str  the environment name. it may be "dev", "prod" etc.
         :param envPath:str  the environment path, default to "./environments".
@@ -50,13 +55,14 @@ class CodeInit(object):
         self.__all = False
     def run(self):
         '''initial the environments'''
+        self.__printSuccess("startText", version)
         configFile = os.path.join(self.envPath, "config.json")
         if not os.path.exists(configFile):
             self.__printDanger("configFileNotExist", configFile)
             return
         data = json.loads(FileHelper.file_get_content(configFile))
         # find the select environment
-        if not self.envName:
+        if not self.envName or not data.__contains__(self.envName):
             self.__printNormal("envNameQuestion")
             print("===========================================")
             for key in data.keys():
@@ -64,15 +70,13 @@ class CodeInit(object):
                 print("[ %s ]: %s" %(key, name))
             string = input("===========================================\n")
             try:
-                index = int(string)
-                print(data.keys())
-                if data.keys()[index]:
-                    self.envName = data.keys()[index]
+                if data.__contains__(string):
+                    self.envName = string
                 else:
-                    self.__printDanger("envNameNotExist", self.envName)
+                    self.__printDanger("envNameNotExist", string)
                     return
             except:
-                self.__printDanger("envNameNotExist", str)
+                self.__printDanger("envNameNotExist", string)
                 return
         dataPath = os.path.join(self.envPath, self.envName)
         envData = data[self.envName]
@@ -92,6 +96,7 @@ class CodeInit(object):
             filePath = os.readlink(filePath)
         curDir = os.path.dirname(filePath)
         obj.envPath = os.path.join(curDir, "environments")
+        obj.envName = "dev"
         obj.projectRoot = os.path.join(".", "environments")
         if not os.path.isdir(obj.projectRoot):
             os.makedirs(obj.projectRoot)
@@ -131,17 +136,13 @@ class CodeInit(object):
                 continue
             itemPath = os.path.join(root, item)
             relativePath = os.path.join(base, item)
-            print(itemPath, relativePath)
-            print(os.path.isdir(itemPath))
             if os.path.isdir(itemPath):
                 files += self.__getFileList(itemPath, relativePath)
             else:
                 files.append(relativePath)
-            print(files)
         return files
 
     def __copyFile(self, root, source, dest):
-        print("copy", source, dest)
         if not os.path.isfile(source):
             self.__printDanger("fileERR", source)
             return False
@@ -150,8 +151,6 @@ class CodeInit(object):
         if os.path.isfile(destfile):
             # check if need overwrite
             str2 = FileHelper.file_get_content(destfile)
-            print(str1)
-            print(str2)
             if str1 == str2:
                 self.__printSuccess("fileNotChange", destfile)
                 return True

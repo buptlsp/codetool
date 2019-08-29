@@ -1,7 +1,7 @@
 # CodeTool
 
 
-## envini
+## envinit
 
 envinit is a tool for  manage the environments of project. usually, the dev enviroment is not equal to the prod environment, so we can use this tool to manage the environment.
 
@@ -31,11 +31,14 @@ sync the environment
 
 ```bash
 cd your_project
-envinit run --envName="prod" --overwrite=1 
+envinit run 
+# you can just run envinit to see the params
+envinit
+envinit --help
 ```
-the script will copy `./environment/prod/a/b/config.xx` to `./a/b/config.txt`，thus, we can save our environments in ./environments.
+the script will copy `./environment/prod/a/b/config.xx` to `./a/b/config.txt`，thus, we can save our environments in `./environments`.
 
-**Tips:** the ./environments should add to git, and the destfile should add to gitignore.
+**Tips:** the `./environments` should add to git, and the destfile should add to gitignore.
 
 
 
